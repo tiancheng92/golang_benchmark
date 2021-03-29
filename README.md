@@ -4,12 +4,14 @@
 * golang版本: 1.16.2
 
 ### 字符串拼接
+
 ```shell
 cd string_join
 go golang_benchmark -bench=. -benchmem -run=none
 ```
 
 * 结果
+
 ```text
 goos: darwin
 goarch: arm64
@@ -28,11 +30,14 @@ ok      test/string_join        7.986s
     * 长文本：使用strings.Join()拼接
 
 ### 遍历列表
+
 ```shell
 cd for_range
 go golang_benchmark -bench=. -benchmem -run=none
 ```
+
 * 结果
+
 ```text
 goos: darwin
 goarch: arm64
@@ -50,14 +55,16 @@ ok      test/for_range  8.525s
 * 结论：
     * 列表中为对象：不建议直接获取其中的value，而是使用index去间接获取
     * 列表中存指针：性能基本无差异
-  
+
 ### sync.pool
+
 ```shell
 cd sync_pool
 go golang_benchmark -bench=. -benchmem -run=none
 ```
 
 * 结果
+
 ```text
 goos: darwin
 goarch: arm64
@@ -69,9 +76,10 @@ ok      test/sync_pool  3.800s
 ```
 
 * 结论
-  * sync.pool能有效减少内存调用，复用对象减少GC压力
-  
+    * sync.pool能有效减少内存调用，复用对象减少GC压力
+
 ### json序列化
+
 ```shell
 cd json_marshal
 go mod tidy
@@ -79,6 +87,7 @@ go golang_benchmark -bench=. -benchmem -run=none
 ```
 
 * 结果
+
 ```text
 goos: darwin
 goarch: arm64
@@ -90,15 +99,17 @@ ok      test/json_marshal       4.381s
 ```
 
 * 结论
-  * 使用第三方包[Jsoniter](http://github.com/json-iterator/go)能有效加快序列化的速度、减少内存压力
-  
+    * 使用第三方包[Jsoniter](http://github.com/json-iterator/go)能有效加快序列化的速度、减少内存压力
+
 ### String 与 Byte 转换
+
 ```shell
 cd byte_string_conversion
 go golang_benchmark -bench=. -benchmem -run=none
 ```
 
 * 结果
+
 ```text
 goos: darwin
 goarch: arm64
@@ -112,7 +123,30 @@ ok      test/byte_string_conversion     3.830s
 ```
 
 * 结论
-  * 避免对象的复制，有效加快了转换的效率，但会缺失string不可变的属性
-  
-  
+    * 避免对象的复制，有效加快了转换的效率，但会缺失string不可变的属性
+
+### 数字转字符串
+
+```shell
+cd number_string_conversion
+go golang_benchmark -bench=. -benchmem -run=none
+```
+
+* 结果
+
+```text
+goos: darwin
+goarch: arm64
+pkg: golang_benchmark/number_string_conversion
+BenchmarkForUseFmtInt-8                 26314370                45.48 ns/op            8 B/op          1 allocs/op
+BenchmarkForUseFmtFloat-8                5565195               214.6 ns/op             8 B/op          1 allocs/op
+BenchmarkForUseStrconvInt-8             70885851                16.51 ns/op            8 B/op          1 allocs/op
+BenchmarkForUseStrconvFloat-8           10590442               113.8 ns/op            32 B/op          2 allocs/op
+PASS
+ok      golang_benchmark/number_string_conversion       6.539s
+```
+
+* 结论
+    * Strconv包的性能远高于fmt
+
 ... 未完待续
