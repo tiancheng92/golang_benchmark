@@ -149,4 +149,26 @@ ok      golang_benchmark/number_string_conversion       6.539s
 * 结论
     * Strconv包的性能远高于fmt
 
+### 去重
+
+```shell
+cd string_deduplicate
+go golang_benchmark -bench=. -benchmem -run=none
+```
+
+* 结果
+
+```text
+goos: darwin
+goarch: arm64
+pkg: golang_benchmark/string_deduplicate
+BenchmarkForDeduplicateBeforeAppend-8             150984              7979 ns/op            2608 B/op        129 allocs/op
+BenchmarkForDeduplicateAfterAppend-8             1000000              1113 ns/op            1864 B/op         12 allocs/op
+PASS
+ok      golang_benchmark/string_deduplicate     3.854s
+```
+
+* 结论
+  * 当要生成简单的去重的字符串列表时，可以先全量append再循环去重，而不是每次append时检测是否重复
+
 ... 未完待续
