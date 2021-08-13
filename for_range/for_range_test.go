@@ -11,6 +11,26 @@ type Tmp struct {
 	D bool
 }
 
+func initMap() map[int]string {
+	s := make(map[int]string, N)
+	for i := 0; i < N; i++ {
+		s[i] = "1"
+	}
+	return s
+}
+
+func initLagerMap() map[int]string {
+	st := ""
+	for j := 0; j < 100000; j++ {
+		st += "1"
+	}
+	s := make(map[int]string, N)
+	for i := 0; i < N; i++ {
+		s[i] = st
+	}
+	return s
+}
+
 func initSlice() []Tmp {
 	s := make([]Tmp, N)
 	for i := 0; i < N; i++ {
@@ -76,6 +96,56 @@ func ForRangeSlicePtr(s []*Tmp) {
 	for i, v := range s {
 		a, b := i, v
 		_, _ = a, b
+	}
+}
+
+func ForRangeMapWithValue(s map[int]string) {
+	for i, v := range s {
+		a, b := i, v
+		_, _ = a, b
+	}
+}
+
+func ForRangeMapWithoutValue(s map[int]string) {
+	for i := range s {
+		a, b := i, s[i]
+		_, _ = a, b
+	}
+}
+
+func BenchmarkForMapWithValue(b *testing.B) {
+	s := initMap()
+
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		ForRangeMapWithValue(s)
+	}
+}
+
+func BenchmarkForMapWithoutValue(b *testing.B) {
+	s := initMap()
+
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		ForRangeMapWithoutValue(s)
+	}
+}
+
+func BenchmarkForLargeMapWithValue(b *testing.B) {
+	s := initLagerMap()
+
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		ForRangeMapWithValue(s)
+	}
+}
+
+func BenchmarkForLargeMapWithoutValue(b *testing.B) {
+	s := initLagerMap()
+
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		ForRangeMapWithoutValue(s)
 	}
 }
 

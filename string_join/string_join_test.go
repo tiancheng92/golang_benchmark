@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-const text = "text"
+const text = "texttexttexttexttexttexttexttexttexttexttexttexttexttexttexttexttexttexttexttexttexttexttexttexttexttexttexttexttexttexttexttexttexttexttext"
 
 // 使用 + 拼接 短文本
 func plusShortText() {
@@ -17,7 +17,7 @@ func plusShortText() {
 // 使用 + 拼接 长文本
 func plusLongText() {
 	var res string
-	for i := 0; i < 100000; i++ {
+	for i := 0; i < 10; i++ {
 		res += text
 	}
 	_ = res
@@ -38,7 +38,7 @@ func stringsJoinShortText() {
 // 使用 strings.join 拼接 长文本
 func stringsJoinLongText() {
 	var list []string
-	for i := 0; i < 100000; i++ {
+	for i := 0; i < 10; i++ {
 		list = append(list, text)
 	}
 	res := strings.Join(list, "")

@@ -29,6 +29,15 @@ func newByteToString(b []byte) {
 	_ = res
 }
 
+func StringToBytes(s string) []byte {
+	return *(*[]byte)(unsafe.Pointer(
+		&struct {
+			string
+			Cap int
+		}{s, len(s)},
+	))
+}
+
 func BenchmarkForNewByteToString(b *testing.B) {
 	tmpByte := []byte(text)
 
@@ -56,5 +65,11 @@ func BenchmarkForNewStringToByte(b *testing.B) {
 func BenchmarkForStringToByte(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		stringToByte(text)
+	}
+}
+
+func BenchmarkForStringToBytes(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		StringToBytes(text)
 	}
 }

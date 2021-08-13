@@ -7,7 +7,7 @@
 
 ```shell
 cd string_join
-go golang_benchmark -bench=. -benchmem -run=none
+go test -bench=. -benchmem -run=none
 ```
 
 * 结果
@@ -33,7 +33,7 @@ ok      test/string_join        7.986s
 
 ```shell
 cd for_range
-go golang_benchmark -bench=. -benchmem -run=none
+go test -bench=. -benchmem -run=none
 ```
 
 * 结果
@@ -60,7 +60,7 @@ ok      test/for_range  8.525s
 
 ```shell
 cd sync_pool
-go golang_benchmark -bench=. -benchmem -run=none
+go test -bench=. -benchmem -run=none
 ```
 
 * 结果
@@ -83,7 +83,7 @@ ok      test/sync_pool  3.800s
 ```shell
 cd json_marshal
 go mod tidy
-go golang_benchmark -bench=. -benchmem -run=none
+go test -bench=. -benchmem -run=none
 ```
 
 * 结果
@@ -105,7 +105,7 @@ ok      test/json_marshal       4.381s
 
 ```shell
 cd byte_string_conversion
-go golang_benchmark -bench=. -benchmem -run=none
+go test -bench=. -benchmem -run=none
 ```
 
 * 结果
@@ -129,7 +129,7 @@ ok      test/byte_string_conversion     3.830s
 
 ```shell
 cd number_string_conversion
-go golang_benchmark -bench=. -benchmem -run=none
+go test -bench=. -benchmem -run=none
 ```
 
 * 结果
@@ -153,7 +153,7 @@ ok      golang_benchmark/number_string_conversion       6.539s
 
 ```shell
 cd string_deduplicate
-go golang_benchmark -bench=. -benchmem -run=none
+go test -bench=. -benchmem -run=none
 ```
 
 * 结果
