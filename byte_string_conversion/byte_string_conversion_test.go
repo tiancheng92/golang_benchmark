@@ -5,46 +5,24 @@ import (
 	"unsafe"
 )
 
-const text = "text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text text"
+const text = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 
-func stringToByte(s string) {
-	res := []byte(s)
-	_ = res
+func stringToByte(s string) []byte {
+	return []byte(s)
 }
 
-func byteToString(b []byte) {
-	res := string(b)
-	_ = res
+func byteToString(b []byte) string {
+	return string(b)
 }
 
-func newStringToByte(s string) {
+func unsafeStringToByte(s string) []byte {
 	x := (*[2]uintptr)(unsafe.Pointer(&s))
 	h := [3]uintptr{x[0], x[1], x[1]}
-	res := *(*[]byte)(unsafe.Pointer(&h))
-	_ = res
+	return *(*[]byte)(unsafe.Pointer(&h))
 }
 
-func newByteToString(b []byte) {
-	res := *(*string)(unsafe.Pointer(&b))
-	_ = res
-}
-
-func StringToBytes(s string) []byte {
-	return *(*[]byte)(unsafe.Pointer(
-		&struct {
-			string
-			Cap int
-		}{s, len(s)},
-	))
-}
-
-func BenchmarkForNewByteToString(b *testing.B) {
-	tmpByte := []byte(text)
-
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
-		newByteToString(tmpByte)
-	}
+func unsafeByteToString(b []byte) string {
+	return *(*string)(unsafe.Pointer(&b))
 }
 
 func BenchmarkForByteToString(b *testing.B) {
@@ -52,24 +30,31 @@ func BenchmarkForByteToString(b *testing.B) {
 
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		byteToString(tmpByte)
+		res := byteToString(tmpByte)
+		_ = res
 	}
 }
 
-func BenchmarkForNewStringToByte(b *testing.B) {
+func BenchmarkForUnsafeByteToString(b *testing.B) {
+	tmpByte := []byte(text)
+
+	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		newStringToByte(text)
+		res := unsafeByteToString(tmpByte)
+		_ = res
 	}
 }
 
 func BenchmarkForStringToByte(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		stringToByte(text)
+		res := stringToByte(text)
+		_ = res
 	}
 }
 
-func BenchmarkForStringToBytes(b *testing.B) {
+func BenchmarkForUnsafeStringToByte(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		StringToBytes(text)
+		res := unsafeStringToByte(text)
+		_ = res
 	}
 }

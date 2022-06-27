@@ -4,10 +4,9 @@ import (
 	"encoding/json"
 	"testing"
 
+	go_json "github.com/goccy/go-json"
 	jsoniter "github.com/json-iterator/go"
 )
-
-var new_json = jsoniter.ConfigCompatibleWithStandardLibrary
 
 var data = `{
 "a":"a",
@@ -23,24 +22,23 @@ type Tmp struct {
 	D map[string]interface{} `json:"d"`
 }
 
-func useJson() {
-	var t Tmp
-	_ = json.Unmarshal([]byte(data), &t)
-}
-
-func useJsoniter() {
-	var t Tmp
-	_ = new_json.Unmarshal([]byte(data), &t)
-}
-
-func BenchmarkUseJson(b *testing.B) {
+func BenchmarkUseEncodingJson(b *testing.B) {
 	for n := 0; n < b.N; n++ {
-		useJson()
+		var t Tmp
+		_ = json.Unmarshal([]byte(data), &t)
 	}
 }
 
 func BenchmarkUseJsoniter(b *testing.B) {
 	for n := 0; n < b.N; n++ {
-		useJsoniter()
+		var t Tmp
+		_ = jsoniter.ConfigCompatibleWithStandardLibrary.Unmarshal([]byte(data), &t)
+	}
+}
+
+func BenchmarkUseGoJson(b *testing.B) {
+	for n := 0; n < b.N; n++ {
+		var t Tmp
+		_ = go_json.Unmarshal([]byte(data), &t)
 	}
 }

@@ -7,50 +7,34 @@ import (
 )
 
 const (
-	Int   = 123456
-	Float = 123.456
+	Int   = 123456789
+	Float = 1.23456789
 )
-
-func useFmtInt() {
-	i := fmt.Sprint(Int)
-	_ = i
-}
-
-func useFmtFloat() {
-	f := fmt.Sprintf("%.2f", Float)
-	_ = f
-}
-
-func useStrconvInt() {
-	i := strconv.Itoa(Int)
-	_ = i
-}
-
-func useStrconvFloat() {
-	f := strconv.FormatFloat(Float, 'f', 2, 32)
-	_ = f
-}
 
 func BenchmarkForUseFmtInt(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		useFmtInt()
-	}
-}
-
-func BenchmarkForUseFmtFloat(b *testing.B) {
-	for i := 0; i < b.N; i++ {
-		useFmtFloat()
+		j := fmt.Sprint(Int)
+		_ = j
 	}
 }
 
 func BenchmarkForUseStrconvInt(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		useStrconvInt()
+		j := strconv.Itoa(Int)
+		_ = j
+	}
+}
+
+func BenchmarkForUseFmtFloat(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		f := fmt.Sprintf("%.3f", Float)
+		_ = f
 	}
 }
 
 func BenchmarkForUseStrconvFloat(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		useStrconvFloat()
+		f := strconv.FormatFloat(Float, 'f', 3, 64)
+		_ = f
 	}
 }

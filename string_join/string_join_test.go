@@ -6,71 +6,96 @@ import (
 	"testing"
 )
 
-const text = "texttexttexttexttexttexttexttexttexttexttexttexttexttexttexttexttexttexttexttexttexttexttexttexttexttexttexttexttexttexttexttexttexttexttext"
+const TestText = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 
-// 使用 + 拼接 短文本
-func plusShortText() {
-	res := text + text + text + text + text + text + text + text + text + text
-	_ = res
-}
+var (
+	TenTestTextList      []string
+	ThousandTestTextList []string
+)
 
-// 使用 + 拼接 长文本
-func plusLongText() {
-	var res string
+func init() {
 	for i := 0; i < 10; i++ {
-		res += text
+		TenTestTextList = append(TenTestTextList, TestText)
 	}
-	_ = res
-}
-
-// 使用 fmt包 拼接文本
-func fmtText() {
-	res := fmt.Sprintf("%s%s%s%s%s%s%s%s%s%s", text, text, text, text, text, text, text, text, text, text)
-	_ = res
-}
-
-// 使用 strings.join 拼接 短文本
-func stringsJoinShortText() {
-	res := strings.Join([]string{text, text, text, text, text, text, text, text, text, text}, "")
-	_ = res
-}
-
-// 使用 strings.join 拼接 长文本
-func stringsJoinLongText() {
-	var list []string
-	for i := 0; i < 10; i++ {
-		list = append(list, text)
+	for i := 0; i < 1000; i++ {
+		ThousandTestTextList = append(ThousandTestTextList, TestText)
 	}
-	res := strings.Join(list, "")
-	_ = res
 }
 
-func BenchmarkForPlusShortText(b *testing.B) {
+func BenchmarkForPlusBy10TestText(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		plusShortText()
+		var res string
+		for i := 0; i < 10; i++ {
+			res += TestText
+		}
+		_ = res
 	}
 }
 
-func BenchmarkForFmtText(b *testing.B) {
+func BenchmarkForFmtBy10TestText(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		fmtText()
+		res := fmt.Sprintf("%s%s%s%s%s%s%s%s%s%s", TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText)
+		_ = res
 	}
 }
 
-func BenchmarkForStringsJoinShortText(b *testing.B) {
+func BenchmarkForStringsJoinBy10TestText(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		stringsJoinShortText()
+		res := strings.Join(TenTestTextList, "")
+		_ = res
 	}
 }
 
-func BenchmarkForPlusLongText(b *testing.B) {
+func BenchmarkForStringsBuildBy10TestText(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		plusLongText()
+		n := 0
+		for j := range TenTestTextList {
+			n += len(TenTestTextList[j])
+		}
+		var res strings.Builder
+		res.Grow(n)
+		for j := range TenTestTextList {
+			res.WriteString(TenTestTextList[j])
+		}
+		_ = res.String()
 	}
 }
 
-func BenchmarkForStringsJoinLongText(b *testing.B) {
+func BenchmarkForPlusBy1000TestText(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		stringsJoinLongText()
+		var res string
+		for i := 0; i < 1000; i++ {
+			res += TestText
+		}
+		_ = res
+	}
+}
+
+func BenchmarkForFmtBy1000TestText(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		res := fmt.Sprintf("%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s", TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText, TestText)
+		_ = res
+	}
+}
+
+func BenchmarkForStringsJoinBy1000TestText(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		res := strings.Join(ThousandTestTextList, "")
+		_ = res
+	}
+}
+
+func BenchmarkForStringsBuildBy1000TestText(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		n := 0
+		for j := range ThousandTestTextList {
+			n += len(ThousandTestTextList[j])
+		}
+		var res strings.Builder
+		res.Grow(n)
+		for j := range ThousandTestTextList {
+			res.WriteString(ThousandTestTextList[j])
+		}
+		_ = res.String()
 	}
 }
